@@ -3,7 +3,7 @@ import {
   Menu, Highlighter, Pencil, Eraser, 
   Type, Minimize2, Maximize2, RotateCw, 
   Search, ToggleLeft, ToggleRight, MoreVertical, 
-  Download, Maximize
+  Download, Maximize, ChevronDown
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import ColorPicker from './ColorPicker';
@@ -31,10 +31,6 @@ const DocumentToolbar: React.FC<DocumentToolbarProps> = ({ documentId }) => {
       ...prev,
       activeTool: prev.activeTool === tool ? null : tool
     }));
-    
-    // Close all dropdowns
-    setShowHighlighterOptions(false);
-    setShowPencilOptions(false);
   };
   
   const handleColorChange = (color: string) => {
@@ -95,17 +91,24 @@ const DocumentToolbar: React.FC<DocumentToolbarProps> = ({ documentId }) => {
           <Menu className="h-5 w-5" />
         </button>
         
-        <div className="relative">
+        <div className="flex items-center space-x-1">
           <button 
             className={`hover:bg-gray-700 p-1.5 rounded-md ${
               toolState.activeTool === 'highlight' ? 'bg-gray-700' : ''
             }`}
-            onClick={() => {
-              toggleTool('highlight');
-              setShowHighlighterOptions(!showHighlighterOptions);
-            }}
+            onClick={() => toggleTool('highlight')}
           >
             <Highlighter className="h-5 w-5" color={toolState.activeTool === 'highlight' ? toolState.color : undefined} />
+          </button>
+          
+          <button 
+            className="hover:bg-gray-700 p-1.5 rounded-md relative"
+            onClick={() => {
+              setShowHighlighterOptions(!showHighlighterOptions);
+              setShowPencilOptions(false);
+            }}
+          >
+            <ChevronDown className="h-4 w-4" />
           </button>
           
           {showHighlighterOptions && (
@@ -120,7 +123,7 @@ const DocumentToolbar: React.FC<DocumentToolbarProps> = ({ documentId }) => {
               </div>
               
               <div className="mb-3">
-                <div className="text-sm mb-2 text-gray-300">Thickness <span className="text-xs opacity-60">ⓘ</span></div>
+                <div className="text-sm mb-2 text-gray-300">Thickness</div>
                 <div className="flex items-center">
                   <span className="text-xs text-gray-400 mr-2">Thin</span>
                   <input 
@@ -156,17 +159,24 @@ const DocumentToolbar: React.FC<DocumentToolbarProps> = ({ documentId }) => {
           )}
         </div>
         
-        <div className="relative">
+        <div className="flex items-center space-x-1">
           <button 
             className={`hover:bg-gray-700 p-1.5 rounded-md ${
               toolState.activeTool === 'pencil' ? 'bg-gray-700' : ''
             }`}
-            onClick={() => {
-              toggleTool('pencil');
-              setShowPencilOptions(!showPencilOptions);
-            }}
+            onClick={() => toggleTool('pencil')}
           >
             <Pencil className="h-5 w-5" color={toolState.activeTool === 'pencil' ? toolState.color : undefined} />
+          </button>
+          
+          <button 
+            className="hover:bg-gray-700 p-1.5 rounded-md relative"
+            onClick={() => {
+              setShowPencilOptions(!showPencilOptions);
+              setShowHighlighterOptions(false);
+            }}
+          >
+            <ChevronDown className="h-4 w-4" />
           </button>
           
           {showPencilOptions && (
