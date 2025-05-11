@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppProvider } from './context/AppContext';
 import MainHeader from './components/MainHeader';
 import FileNavHeader from './components/FileNavHeader';
 import FileManager from './components/FileManager';
 import DocumentViewer from './components/DocumentViewer';
+import LoginPage from './components/LoginPage';
 import { useApp } from './context/AppContext';
+import { useAuthStore } from './store/authStore';
 
 const AppContent: React.FC = () => {
   const { 
@@ -83,6 +85,24 @@ const AppContent: React.FC = () => {
 };
 
 function App() {
+  const { user, loading, checkAuth } = useAuthStore();
+  
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return <LoginPage />;
+  }
+  
   return (
     <AppProvider>
       <AppContent />
